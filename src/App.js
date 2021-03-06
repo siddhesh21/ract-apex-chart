@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import ApexChart from "./ApexChart";
+import { auth, provider } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function App() {
+  const [user, loading, error] = useAuthState(auth);
+  console.log(user);
+
+  const signIn = () => {
+    auth.signInWithPopup(provider).catch((error) => alert(error.message));
+  };
+
+  // React Firebase Hooks
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Chart App</h1>
+      {loading ? (
+        <h1>LOADING</h1>
+      ) : user ? (
+        <ApexChart />
+      ) : (
+        <button onClick={signIn}>Sign in with Google</button>
+      )}
     </div>
   );
 }
